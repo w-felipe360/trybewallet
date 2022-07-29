@@ -1,8 +1,16 @@
 // Coloque aqui suas actions
-function recebeEmail(email) {
-  return {
-    type: 'EMAIL-DATA',
-    payload: email,
-  };
-}
-export default recebeEmail;
+export const recebeEmail = (email) => ({
+  type: 'EMAIL-DATA',
+  payload: email,
+});
+export const recebeMoeda = (moeda) => ({
+  type: 'CURRENCIES-DATA',
+  payload: moeda,
+});
+export const currenciesThunk = () => async (dispatch) => {
+  const minhaApi = 'https://economia.awesomeapi.com.br/json/all';
+  const response = await fetch(minhaApi);
+  const meuJson = await response.json();
+  const resultado = Object.keys(meuJson).filter((key) => key !== 'USDT');
+  dispatch(recebeMoeda(resultado));
+};
