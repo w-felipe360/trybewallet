@@ -14,3 +14,7 @@ export const currenciesThunk = () => async (dispatch) => {
   const resultado = Object.keys(meuJson).filter((key) => key !== 'USDT');
   dispatch(recebeMoeda(resultado));
 };
+export const despesas = (elementos) => ({
+  type: 'DESPESAS-DATA',
+  payload: elementos,
+});
