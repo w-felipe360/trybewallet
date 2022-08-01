@@ -5,60 +5,76 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '../redux/reducers';
 import { createMemoryHistory } from 'history';
-import renderWithRouter from './RenderWithRouter';
+import Wallet from '../pages/Wallet';
+import Login from '../pages/Login';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 const history = createMemoryHistory();
-      const store = createStore(rootReducer);
-      // const email = screen.getByPlaceholderText('E-Mail');
-      // const senha = screen.getByPlaceholderText('Password');
+// const email = screen.getByPlaceholderText('E-Mail');
+// const senha = screen.getByPlaceholderText('Password');
 describe('Testando a aplicação:' , () => {
-    test('se a página renderiza o campo de e-mail', () => {
-      const store = createStore(rootReducer);
-    renderWithRouter(
-      <Provider store={ store }>
-        <App />
-      </Provider>, ['/']
-    )
-    const email = screen.getByPlaceholderText('E-Mail');
-
+  test('se a página renderiza o campo de e-mail', () => {
+    renderWithRouterAndRedux(<Login />);
+    const email = screen.getByPlaceholderText('E-Mail')
     expect(email).toBeInTheDocument();
     })
     test('se é renderizado o campo para digitar a senha', () => {
-      renderWithRouter(
-        <Provider store={ store }>
-          <App />
-        </Provider>, ['/']
-      )
+      renderWithRouterAndRedux(<Login />);
       const senha = screen.getByPlaceholderText('Password');
       expect(senha).toBeInTheDocument();
     })
     test('se é renderizado um botão de login', () => {
-      renderWithRouter(
-        <Provider store={ store }>
-          <App />
-        </Provider>, ['/']
-      )
+      renderWithRouterAndRedux(<Login />);
       const loginButton = screen.getByRole('button', {
         name: /entrar/i
       })
       expect(loginButton).toBeInTheDocument();
     })
-    test(`se ao preencher o login e clicar no botão, a página
-    da carteira é renderizada`, async () => {
-      const { history } = renderWithRouterAndRedux(<App />);
-      history.push('/')
-      const loginButton = screen.getByRole('button', {
-        name: /entrar/i
-      })
-      const email = screen.getByPlaceholderText('E-Mail');
-      const senha = screen.getByPlaceholderText('Password');
-      userEvent.type(email, 'teste.teste@gmail.com');
-      userEvent.type(senha, '123456789');
-      userEvent.click(loginButton);
+    test(`se a página de carteira é renderizada corretamente`, () => {
+   renderWithRouterAndRedux(<Wallet />);
+   console.log(screen.logTestingPlaygroundURL());
       const loggedUser = screen.getByRole('heading', {
-        name: /teste\.teste@gmail\.com/i
-      })
+        name: /brl/i
+      });
       expect(loggedUser).toBeInTheDocument();
     })
+    test(`se o botão tá funcionando`, () => {
+   renderWithRouterAndRedux(<Login />);
+   const emailInput = screen.getByPlaceholderText(/e-mail/i);
+   const passInput = screen.getByPlaceholderText(/password/i);
+   const botaoChato = screen.getByRole('button', {
+    name: /entrar/i
+  })
+  userEvent.type(emailInput, 'w.felipe@gmail.com');
+  userEvent.type(passInput, '123456789');
+  userEvent.click(botaoChato);
+
+  renderWithRouterAndRedux(<Wallet />);
+  const description = screen.getByTestId('description-input');
+   expect(description).toBeInTheDocument();
+
+    })
+  test(`se existe um campo para inserir o dinheiro`, () => {
+   renderWithRouterAndRedux(<Wallet />);
+    const dinheiro = screen.getByTestId('value-input');
+    expect(dinheiro).toBeInTheDocument();
+  })
+  test(`teste se há um campo para a descrição`, () => {
+   renderWithRouterAndRedux(<Wallet />);
+   const description = screen.getByTestId('description-input');
+   expect(description).toBeInTheDocument();
+  })
+  test(`teste se existe um botão com o texto adicionar despesas`, () => {
+   renderWithRouterAndRedux(<Wallet />);
+    
+    const botaoChato = screen.getByRole('button', {
+      name: /adicionar despesas/i
+    })
+    expect(botaoChato).toBeInTheDocument();
+  })
+  test(`se há um campo para inserir pagamentos`, () => {
+   renderWithRouterAndRedux(<Wallet />);
+    const money = screen.getByText('Dinheiro');
+    expect(money).toBeInTheDocument();
+  })
 })
