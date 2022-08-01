@@ -1,17 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from '../App';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import rootReducer from '../redux/reducers';
+import { screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import Wallet from '../pages/Wallet';
 import Login from '../pages/Login';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 const history = createMemoryHistory();
-// const email = screen.getByPlaceholderText('E-Mail');
-// const senha = screen.getByPlaceholderText('Password');
 describe('Testando a aplicação:' , () => {
   test('se a página renderiza o campo de e-mail', () => {
     renderWithRouterAndRedux(<Login />);
