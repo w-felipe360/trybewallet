@@ -3,6 +3,7 @@ export const recebeEmail = (email) => ({
   type: 'EMAIL-DATA',
   payload: email,
 });
+export const alimenta = 'Alimentação';
 export const recebeMoeda = (moeda) => ({
   type: 'CURRENCIES-DATA',
   payload: moeda,

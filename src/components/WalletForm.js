@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { currenciesThunk, despesas } from '../redux/actions';
+import { currenciesThunk, despesas, alimenta } from '../redux/actions';
 
 class WalletForm extends Component {
   constructor() {
     super();
     this.state = {
-      numberInput: 0,
-      productInput: '',
-      currencyInput: '',
-      paymentMethod: '',
-      category: '',
       id: 0,
-      dadosMoedas: [],
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: alimenta,
+      exchangeRates: [],
     };
   }
 
@@ -23,47 +23,56 @@ class WalletForm extends Component {
     recebeMoeda();
   }
 
+  solicitaApi = async () => {
+    const minhaApi = 'https://economia.awesomeapi.com.br/json/all';
+    const response = await fetch(minhaApi);
+    const meuJson = await response.json();
+    return meuJson;
+  }
+
   escreve = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  enviaDados = () => {
-    const { enviaDespesas, moeda } = this.props;
-    enviaDespesas(this.state);
+  enviaDados = async () => {
+    const { enviaDespesas } = this.props;
     this.setState({
-      numberInput: 0,
-      productInput: '',
-      currencyInput: '',
-      paymentMethod: '',
-      category: '',
-      id: 0,
-      dadosMoedas: [moeda],
-
+      exchangeRates: await this.solicitaApi(),
     });
+    enviaDespesas(this.state);
+    this.setState((prevState) => ({
+      id: prevState.id + 1,
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: alimenta,
+      exchangeRates: [],
+    }));
   }
 
   render() {
-    const { numberInput, productInput } = this.state;
+    const { value, description } = this.state;
     const { moeda } = this.props;
     return (
       <div>
         <input
-          value={ numberInput }
+          value={ value }
           type="number"
           data-testid="value-input"
-          name="numberInput"
+          name="value"
           onChange={ this.escreve }
         />
         <input
-          value={ productInput }
+          value={ description }
           type="text"
           data-testid="description-input"
-          name="productInput"
+          name="description"
           onChange={ this.escreve }
         />
         <select
           data-testid="currency-input"
-          name="currencyInput"
+          name="currency"
           onChange={ this.escreve }
 
         >
@@ -75,7 +84,7 @@ class WalletForm extends Component {
         </select>
         <select
           data-testid="method-input"
-          name="paymentMethod"
+          name="method"
           onChange={ this.escreve }
         >
           <option>Dinheiro</option>
@@ -84,10 +93,10 @@ class WalletForm extends Component {
         </select>
         <select
           data-testid="tag-input"
-          name="category"
+          name="tag"
           onChange={ this.escreve }
         >
-          <option>Alimentação</option>
+          <option>{alimenta}</option>
           <option>Lazer</option>
           <option>Trabalho</option>
           <option>Transporte</option>
