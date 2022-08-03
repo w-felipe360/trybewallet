@@ -19,3 +19,7 @@ export const despesas = (elementos) => ({
   type: 'DESPESAS-DATA',
   payload: elementos,
 });
+export const limparInfos = (elementos) => ({
+  type: 'LIMPA-DATA',
+  payload: elementos,
+});

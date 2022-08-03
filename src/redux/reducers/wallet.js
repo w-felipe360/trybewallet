@@ -17,6 +17,12 @@ const wallet = (state = INITIAL_STATE, action) => {
       ...state,
       expenses: [...state.expenses, action.payload],
     };
+  case 'LIMPA-DATA':
+    return {
+      ...state,
+      expenses: state.expenses.filter((elemento) => (
+        Number(action.payload) !== Number(elemento.id))),
+    };
   default:
     return state;
   }
